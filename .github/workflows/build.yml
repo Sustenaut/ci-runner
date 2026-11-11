@@ -1,0 +1,53 @@
+# Builds the runner image, checks it holds what pubkit's jobs expect, and on main pushes
+# it to ghcr.io/sustenaut/ci-runner, tagged with the commit and `latest`. This repository
+# is public, so these runs are on GitHub's runners at no cost, and never on the
+# self-hosted ones, which public repositories cannot use. Weekly, the image is built
+# again without the layer cache, for the base's and Ubuntu's security updates.
+#
+# Sustenaut/shared-infra's infra/ci-runners/arc.yaml pins the image by digest: a new
+# image reaches the runners only when that pin moves.
+name: build
+
+on:
+  pull_request:
+  push: { branches: [main] }
+  schedule: [{ cron: '23 4 * * 1' }]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: ghcr.io/sustenaut/ci-runner
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - name: Build the image
+        uses: Sustenaut/pubhost/actions/docker-build@2196c741d3de6c92c6035c42435c6e517c8ba0ce # v0.1.0
+        with:
+          tags: ${{ env.IMAGE }}:${{ github.sha }}
+          scope: ci-runner
+          no-cache: ${{ github.event_name == 'schedule' }}
+      - name: Check the image
+        env: { TAG: '${{ env.IMAGE }}:${{ github.sha }}' }
+        run: docker run --rm -i --entrypoint bash "$TAG" -s < check.sh
+      - name: Push the image
+        if: github.event_name != 'pull_request'
+        env:
+          TAG: ${{ env.IMAGE }}:${{ github.sha }}
+          TOKEN: ${{ github.token }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          printf '%s' "$TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
+          docker tag "$TAG" "$IMAGE:latest"
+          docker push "$TAG"
+          docker push "$IMAGE:latest"
+          digest=$(docker inspect --format '{{index .RepoDigests 0}}' "$TAG")
+          echo "Pushed $digest" >> "$GITHUB_STEP_SUMMARY"
