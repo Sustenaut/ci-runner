@@ -21,6 +21,18 @@ for the base's and Ubuntu's security updates.
 
 A new image reaches the runners only when shared-infra's pin moves to its digest.
 
+## Rules
+
+The repository is a [pubkit](https://github.com/Sustenaut/pubkit) service, like the
+other Sustenaut repositories: `pubkit.json` holds its rules and `pubkit sync` writes
+the managed files (`AGENTS.md`, `./pubkit`, `./pubsec`, `with-secrets`, the CI in
+`pr.yml` and `main.yml`, `.github/dependabot.yml`). The CI checks the managed files
+are in step and runs ShellCheck on `check.sh`; `integrations.yml` holds
+`integrations.json` to what the repository calls. Dependabot watches the
+`Dockerfile`'s base image (docker) and the Actions it pins, and main's ruleset
+requires `ci / passed` and `integrations / scan` (`./pubkit protect`). The image
+itself is built by `build.yml`, which is the repository's own.
+
 ## Changing what it holds
 
 Add the package to the `apt-get install` line of the `Dockerfile`, and its command to

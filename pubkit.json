@@ -1,0 +1,9 @@
+{
+  "kind": "service",
+  "ci": {
+    "with": { "shellcheck": "check.sh with-secrets" },
+    "jobs": { "sonar": false }
+  },
+  "protect": { "checks": ["ci / passed", "integrations / scan"], "tags": false },
+  "security": { "dependabot": { "ecosystems": ["github-actions", "docker"] } }
+}
