@@ -34,10 +34,11 @@ RUN apt-get update -y \
 
 # Node.js, as ubuntu-latest has it on the PATH: some jobs call node or npm without
 # setup-node (a service's tests running `node --test`). The release tarball is checked
-# against nodejs.org's SHA-256; the version follows pubkit's node-version default.
-ARG NODE_VERSION=22.23.5
-ARG NODE_SHA256_X64=cdeb8670a0c81f51b4dc4ac61919f9b1ad917b304bf8221eb939570663d240f8
-ARG NODE_SHA256_ARM64=2babb9eb5264860d540849f4b064a6fbdebcdc323657d9d382ce23d313fd5e09
+# against nodejs.org's SHA-256; the major follows ubuntu-latest's default
+# Node.js (24 on Ubuntu 26.04, which ubuntu-latest moves to in November 2026).
+ARG NODE_VERSION=24.22.3
+ARG NODE_SHA256_X64=4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb
+ARG NODE_SHA256_ARM64=6e51a2ada00f0011cc266f65d98922b403d7ad88f809ca2aa615a5fe1ce6e86c
 RUN case "$(dpkg --print-architecture)" in \
       amd64) arch=x64; sum="$NODE_SHA256_X64" ;; \
       arm64) arch=arm64; sum="$NODE_SHA256_ARM64" ;; \
