@@ -4,8 +4,8 @@ The container image Sustenaut's self-hosted GitHub Actions runners run:
 `ghcr.io/sustenaut/ci-runner`. It is GitHub's
 [`actions-runner`](https://github.com/actions/runner) image, pinned by digest, plus what
 [pubkit](https://github.com/Sustenaut/pubkit)'s reusable workflows expect of GitHub's
-`ubuntu-latest`: a C toolchain, Python 3 with venv and pip, ShellCheck, the GitHub CLI,
-and a few archive and network tools. `check.sh` lists them, and the build fails when one
+`ubuntu-latest`: a C toolchain, Python 3 with venv and pip, Node.js, ShellCheck, the GitHub CLI,
+and a few archive, process and network tools (lsof, ss). `check.sh` lists them, and the build fails when one
 is missing.
 
 The runners are the scale set `sustenaut-ci`, run by GitHub's Actions Runner Controller
