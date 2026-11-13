@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # What the image must hold, run inside it by the build workflow (and by hand:
 #   docker run --rm -i --entrypoint bash ghcr.io/sustenaut/ci-runner:latest -s < check.sh).
 # Each line is a tool pubkit's reusable workflows call without installing it on
