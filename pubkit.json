@@ -1,7 +1,11 @@
 {
   "kind": "service",
   "ci": {
-    "with": { "shellcheck": "check.sh with-secrets" },
+    "with": {
+      "shellcheck": "check.sh with-secrets",
+      "setup": "python3 -m venv .venv && tests/install-lock .venv/bin/pip",
+      "test": "cd tests && ../.venv/bin/python -m pytest -q"
+    },
     "jobs": { "sonar": false }
   },
   "protect": { "checks": ["ci / passed", "integrations / scan"], "tags": false },

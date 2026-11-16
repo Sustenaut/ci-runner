@@ -26,13 +26,20 @@ jobs:
     uses: Sustenaut/pubkit/.github/workflows/job-service-checks.yml@c502c3d3969ac75ec9a411c284e49f01c5a93558 # v0.37.0
     with: {"shellcheck": "check.sh with-secrets"}
 
+  tests:
+    name: ci
+    needs: [tested]
+    if: ${{ needs.tested.outputs.tested != 'true' }}
+    uses: Sustenaut/pubkit/.github/workflows/job-service-tests.yml@c502c3d3969ac75ec9a411c284e49f01c5a93558 # v0.37.0
+    with: {"setup": "python3 -m venv .venv && tests/install-lock .venv/bin/pip", "test": "cd tests && ../.venv/bin/python -m pytest -q"}
+
   # The one check a ruleset requires: it passes only when every job
   # above succeeded or, where an earlier run already passed on the
   # commit's tree, was skipped for it. None is skipped for not being asked for.
   passed:
     name: ci / passed
     if: always()
-    needs: [tested, checks]
+    needs: [tested, checks, tests]
     runs-on: ubuntu-latest
     steps:
       - run: |
