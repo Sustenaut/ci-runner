@@ -3,7 +3,7 @@
 The container image Sustenaut's self-hosted GitHub Actions runners run:
 `ghcr.io/sustenaut/ci-runner`. It is GitHub's
 [`actions-runner`](https://github.com/actions/runner) image, pinned by digest, plus what
-[pubkit](https://github.com/Sustenaut/pubkit)'s reusable workflows expect of GitHub's
+[pubrules](https://github.com/Sustenaut/pubrules)'s reusable workflows expect of GitHub's
 `ubuntu-latest`: a C toolchain, Python 3 with venv and pip, Node.js, ShellCheck, the GitHub CLI,
 and a few archive, process and network tools (lsof, ss). `check.sh` lists them, and the build fails when one
 is missing.
@@ -23,14 +23,14 @@ A new image reaches the runners only when shared-infra's pin moves to its digest
 
 ## Rules
 
-The repository is a [pubkit](https://github.com/Sustenaut/pubkit) service, like the
-other Sustenaut repositories: `pubkit.json` holds its rules and `pubkit sync` writes
-the managed files (`AGENTS.md`, `./pubkit`, `./pubsec`, `with-secrets`, the CI in
+The repository is a [pubrules](https://github.com/Sustenaut/pubrules) service, like the
+other Sustenaut repositories: `pubrules.json` holds its rules and `pubrules sync` writes
+the managed files (`AGENTS.md`, `./pubrules`, `./pubsec`, `with-secrets`, the CI in
 `pr.yml` and `main.yml`, `.github/dependabot.yml`). The CI checks the managed files
 are in step and runs ShellCheck on `check.sh`; `integrations.yml` holds
 `integrations.json` to what the repository calls. Dependabot watches the
 `Dockerfile`'s base image (docker) and the Actions it pins, and main's ruleset
-requires `ci / passed` and `integrations / scan` (`./pubkit protect`). The image
+requires `ci / passed` and `integrations / scan` (`./pubrules protect`). The image
 itself is built by `build.yml`, which is the repository's own.
 
 ## Changing what it holds

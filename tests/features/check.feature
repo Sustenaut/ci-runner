@@ -1,4 +1,4 @@
-Feature: check.sh refuses an image that lacks what pubkit's workflows call
+Feature: check.sh refuses an image that lacks what pubrules's workflows call
   The build workflow runs check.sh inside the image, and the first thing
   missing fails the build. Here it runs outside any image, with stand-in
   programs on PATH, so each refusal is seen on its own.

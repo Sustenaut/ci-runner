@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # What the image must hold, run inside it by the build workflow (and by hand:
 #   docker run --rm -i --entrypoint bash ghcr.io/sustenaut/ci-runner:latest -s < check.sh).
-# Each line is a tool pubkit's reusable workflows call without installing it on
+# Each line is a tool pubrules's reusable workflows call without installing it on
 # GitHub's ubuntu-latest; the first one missing fails the build.
 set -euo pipefail
 [[ $(id -un) == runner ]] || { echo "the image must run as runner, not $(id -un)" >&2; exit 1; }

@@ -1,6 +1,6 @@
 # The runner image of Sustenaut's self-hosted CI (the scale set sustenaut-ci, which
 # Sustenaut/shared-infra's help/ci-runners.md describes): GitHub's actions-runner image,
-# pinned by digest, plus what pubkit's reusable workflows take for granted on GitHub's
+# pinned by digest, plus what pubrules's reusable workflows take for granted on GitHub's
 # ubuntu-latest. The base already has git, curl, jq, unzip, sudo and the Docker CLI with
 # buildx; the job's dockerd runs beside it in the pod.
 #
@@ -9,7 +9,7 @@
 FROM ghcr.io/actions/actions-runner:2.338.2@sha256:759a1d94a15b05941aba5196974ff43fe15b4cbba29b694b35cbc32a1166b232
 
 LABEL org.opencontainers.image.source="https://github.com/Sustenaut/ci-runner" \
-      org.opencontainers.image.description="Sustenaut's self-hosted GitHub Actions runner: actions-runner plus the tools pubkit's CI expects of ubuntu-latest." \
+      org.opencontainers.image.description="Sustenaut's self-hosted GitHub Actions runner: actions-runner plus the tools pubrules's CI expects of ubuntu-latest." \
       org.opencontainers.image.licenses="Apache-2.0"
 
 USER root
