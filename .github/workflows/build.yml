@@ -1,4 +1,4 @@
-# Builds the runner image, checks it holds what pubkit's jobs expect, and on main pushes
+# Builds the runner image, checks it holds what pubrules's jobs expect, and on main pushes
 # it to ghcr.io/sustenaut/ci-runner, tagged with the commit and `latest`. This repository
 # is public, so these runs are on GitHub's runners at no cost, and never on the
 # self-hosted ones, which public repositories cannot use. Weekly, the image is built
