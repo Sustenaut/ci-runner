@@ -3,18 +3,24 @@ Feature: check.sh refuses an image that lacks what pubrules's workflows call
   missing fails the build. Here it runs outside any image, with stand-in
   programs on PATH, so each refusal is seen on its own.
 
+  Background:
+    Given a scratch directory
+    And a file "check.sh" copied from "check.sh"
+    And every tool check.sh looks for is installed
+
   Scenario: An image that runs as root is refused
-    Given every tool check.sh looks for is installed
-    And the image runs as "root"
-    When check.sh runs
-    Then it fails, saying "the image must run as runner, not root"
+    Given a stand-in "id" that prints "root"
+    When I run "bash check.sh"
+    Then it fails
+    And stderr mentions "the image must run as runner, not root"
+    And "id" was run with "-un"
 
   Scenario Outline: An image without <tool> is refused, naming it
-    Given every tool check.sh looks for is installed
-    And the image runs as "runner"
+    Given a stand-in "id" that prints "runner"
     But "<tool>" is not installed
-    When check.sh runs
-    Then it fails, saying "missing: <tool>"
+    When I run "bash check.sh"
+    Then it fails
+    And stderr mentions "missing: <tool>"
 
     Examples:
       | tool       |
@@ -24,8 +30,10 @@ Feature: check.sh refuses an image that lacks what pubrules's workflows call
       | nc         |
 
   Scenario: An image whose sudo asks for a password is refused
-    Given every tool check.sh looks for is installed
-    And the image runs as "runner"
-    But sudo asks for a password
-    When check.sh runs
-    Then it fails, saying "sudo: a password is required"
+    Given a stand-in "id" that prints "runner"
+    But a stand-in "sudo" that fails, saying "sudo: a password is required"
+    When I run "bash check.sh"
+    Then it fails
+    And stderr mentions "sudo: a password is required"
+    And "docker" was run with "buildx version"
+    And "sudo" was run with "-n true"
